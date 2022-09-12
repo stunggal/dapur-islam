@@ -93,8 +93,10 @@ class PenggunaController extends Controller
      */
     public function show(pengguna $pengguna, $id)
     {
+        $user = User::where('id', auth()->user()->id)->first();
         return view('pengguna.profile', [
-            'title' => 'My Profile'
+            'title' => 'My Profile',
+            'user' => $user
         ]);
     }
 
@@ -106,7 +108,11 @@ class PenggunaController extends Controller
      */
     public function edit(pengguna $pengguna)
     {
-        //
+        $user = User::where('id', auth()->user()->id)->first();
+        return view('pengguna.edit', [
+            'title' => 'Edit Profile',
+            'user' => $user
+        ]);
     }
 
     /**
@@ -116,9 +122,20 @@ class PenggunaController extends Controller
      * @param  \App\Models\pengguna  $pengguna
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, pengguna $pengguna)
+    public function update(Request $request, pengguna $pengguna, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|min:3',
+            'nim' => 'required|min:12|max:12',
+            'semester' => 'required|min:1|max:2',
+            'username' => 'required|min:3',
+        ]);
+        $validatedData['prodi'] = $request['prodi'];
+        // return redirect('/login')->with('success', 'pendaftaran telah baerhasil, harap login ulang');
+
+        $updatedUser = User::findOrFail($id);
+        $updatedUser->update($validatedData);
+        return redirect('/')->with('success', 'Data have been updated!');
     }
 
     /**

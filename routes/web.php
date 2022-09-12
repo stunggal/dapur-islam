@@ -25,4 +25,6 @@ Route::post('/login', [PenggunaController::class, 'log']);
 Route::get('/signin', [PenggunaController::class, 'create']);
 Route::post('/signin', [PenggunaController::class, 'store']);
 Route::post('/logout', [PenggunaController::class, 'logout']);
+Route::get('/profile/edit/{id}', [PenggunaController::class, 'edit']);
+Route::post('/profile/edit/{id}', [PenggunaController::class, 'update']);
 Route::get('/profile/{id}', [PenggunaController::class, 'show']);
