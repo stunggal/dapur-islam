@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\daftar;
+use App\Models\puasa;
 use Illuminate\Http\Request;
 
 class DaftarController extends Controller
@@ -37,7 +38,17 @@ class DaftarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'tanggal' => 'required',
+            'hari' => 'required',
+        ]);
+        $validatedData['user_id'] = auth()->user()->id;
+        $kondisi = puasa::where('user_id', $validatedData['user_id'])->where('tanggal', $validatedData['tanggal'])->first();
+        if (!empty($kondisi)) {
+            return redirect('/')->with('error', 'Maaf, anda sudah terdaftar');
+        }
+        puasa::create($validatedData);
+        return redirect('/')->with('success', 'Pendaftaran berhasil');
     }
 
     /**

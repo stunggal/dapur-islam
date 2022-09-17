@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\daftar;
-use App\Models\dashboard;
 use App\Models\puasa;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class PuasaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,19 +20,14 @@ class DashboardController extends Controller
         } else {
             $user = User::where('id', auth()->user()->id)->first();
         }
+        $puasa = puasa::where('user_id', $user->id)->get();
+        // return $daftar->user->username;
 
         // get next thursday
-        $thursday = strtotime('next thursday');
-        $monday = strtotime('next monday');
-        $thursday = date("d-m-Y", $thursday);
-        $monday = date("d-m-Y", $monday);
-        $puasa = puasa::where('tanggal', $thursday)->orWhere('tanggal', $monday)->get();
-        return view('dashboard.main', [
-            'title' => 'Dashboard',
+        return view('puasa.main', [
+            'title' => 'Puasa',
             'puasa' => $puasa,
             'user' => $user,
-            'thursday' => $thursday,
-            'monday' => $monday,
         ]);
     }
 
@@ -62,10 +55,10 @@ class DashboardController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\dashboard  $dashboard
+     * @param  \App\Models\puasa  $puasa
      * @return \Illuminate\Http\Response
      */
-    public function show(dashboard $dashboard)
+    public function show(puasa $puasa)
     {
         //
     }
@@ -73,10 +66,10 @@ class DashboardController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\dashboard  $dashboard
+     * @param  \App\Models\puasa  $puasa
      * @return \Illuminate\Http\Response
      */
-    public function edit(dashboard $dashboard)
+    public function edit(puasa $puasa)
     {
         //
     }
@@ -85,10 +78,10 @@ class DashboardController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\dashboard  $dashboard
+     * @param  \App\Models\puasa  $puasa
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, dashboard $dashboard)
+    public function update(Request $request, puasa $puasa)
     {
         //
     }
@@ -96,11 +89,13 @@ class DashboardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\dashboard  $dashboard
+     * @param  \App\Models\puasa  $puasa
      * @return \Illuminate\Http\Response
      */
-    public function destroy(dashboard $dashboard)
+    public function destroy(puasa $puasa)
     {
-        //
+        puasa::destroy($puasa->id);
+        return redirect('/puasa')->with('success', 'Data have been deleted!');
+        return $puasa->id;
     }
 }

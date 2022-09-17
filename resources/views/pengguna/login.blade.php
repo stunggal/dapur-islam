@@ -71,7 +71,7 @@
                                 @endif
                             </div>
 
-                            <form action="/login" method="post" class="row g-3 needs-validation" novalidate>
+                            <form action="" method="post" class="row g-3 needs-validation" novalidate>
                                 @csrf
                                 <div class="col-12">
                                     <label for="yourUsername" class="form-label">Username</label>

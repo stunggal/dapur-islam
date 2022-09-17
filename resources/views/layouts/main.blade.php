@@ -52,69 +52,77 @@
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div><!-- End Logo -->
 
+        @auth
+            <nav class="header-nav ms-auto">
+                <ul class="d-flex align-items-center">
 
-        <nav class="header-nav ms-auto">
-            <ul class="d-flex align-items-center">
+                    <li class="nav-item d-block d-lg-none">
+                        <a class="nav-link nav-icon search-bar-toggle " href="#">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li><!-- End Search Icon-->
 
-                <li class="nav-item d-block d-lg-none">
-                    <a class="nav-link nav-icon search-bar-toggle " href="#">
-                        <i class="bi bi-search"></i>
-                    </a>
-                </li><!-- End Search Icon-->
+                    <li class="nav-item dropdown pe-3">
 
-                <li class="nav-item dropdown pe-3">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
+                            data-bs-toggle="dropdown">
+                            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                            <span class="d-none d-md-block dropdown-toggle ps-2">{{ $user->username }}</span>
+                        </a><!-- End Profile Iamge Icon -->
 
-                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
-                        data-bs-toggle="dropdown">
-                        <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">{{ $user->username }}</span>
-                    </a><!-- End Profile Iamge Icon -->
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                            <li class="dropdown-header">
+                                <h6>{{ $user->username }}</h6>
+                                <span>{{ $user->name }}</span>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                        <li class="dropdown-header">
-                            <h6>{{ $user->username }}</h6>
-                            <span>{{ $user->name }}</span>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="/profile/{{ $user->id }}">
+                                    <i class="bi bi-person"></i>
+                                    <span>My Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="/profile/{{ $user->id }}">
-                                <i class="bi bi-person"></i>
-                                <span>My Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="/profile/edit/{{ $user->id }}">
+                                    <i class="bi bi-gear"></i>
+                                    <span>Account Settings</span>
+                                </a>
+                            </li>
 
-                        <li>
-                            <a class="dropdown-item d-flex align-items-center" href="/profile/edit/{{ $user->id }}">
-                                <i class="bi bi-gear"></i>
-                                <span>Account Settings</span>
-                            </a>
-                        </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                            <li>
+                                <form action="/logout" method="post">
+                                    @csrf
+                                    <button class="dropdown-item d-flex align-items-center" type="submit">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <span>Sign Out</span>
+                                    </button>
+                                </form>
+                            </li>
 
-                        <li>
-                            <form action="/logout" method="post">
-                                @csrf
-                                <button class="dropdown-item d-flex align-items-center" type="submit">
-                                    <i class="bi bi-box-arrow-right"></i>
-                                    <span>Sign Out</span>
-                                </button>
-                            </form>
-                        </li>
+                        </ul><!-- End Profile Dropdown Items -->
+                    </li><!-- End Profile Nav -->
 
-                    </ul><!-- End Profile Dropdown Items -->
-                </li><!-- End Profile Nav -->
+                </ul>
+            </nav><!-- End Icons Navigation -->
+        @endauth
 
-            </ul>
-        </nav><!-- End Icons Navigation -->
+        @guest
+            <nav class="header-nav ms-auto">
+                <a href="/login"><button type="button" class="btn btn-primary">Login</button></a> |
+                <a href="/signin"><button type="button" class="btn btn-secondary">Sign In</button></a>
+            </nav>
+        @endguest
 
     </header><!-- End Header -->
 
@@ -124,24 +132,29 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link " href="/">
+                <a class="nav-link @if ($title == 'Dashboard') @else
+                collapsed @endif"
+                    href="/">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
             </li><!-- End Dashboard Nav -->
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-                    <i class="bi bi-journal-text"></i><span>Registrasi</span><i class="bi bi-chevron-down ms-auto"></i>
-                </a>
-                <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a href="/daftar">
-                            <i class="bi bi-circle"></i><span>Puasa Senin Kamis</span>
-                        </a>
-                    </li>
-                </ul>
-            </li><!-- End Forms Nav -->
+            @auth
+                <li class="nav-item">
+                    <a class="nav-link @if ($title == 'Puasa') @else
+                    collapsed @endif"
+                        data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-journal-text"></i><span>Puasaku</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="/puasa">
+                                <i class="bi bi-circle"></i><span>Semua puasaku</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li><!-- End Forms Nav -->
+            @endauth
 
         </ul>
 
